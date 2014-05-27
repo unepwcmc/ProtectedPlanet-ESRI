@@ -1,6 +1,8 @@
 import boto
 import sys, os
 import yaml
+import zipfile
+from zipfile import ZipFile
 
 s3_secrets_file = open(os.path.join('src', 'config','s3.yaml'),'r')
 s3_secrets = yaml.load(s3_secrets_file)
@@ -17,3 +19,5 @@ bucket = conn.get_bucket(bucket_name)
 file_list = [(k.last_modified, k) for k in bucket]
 key_to_download = sorted(file_list, cmp=lambda x,y: cmp(x[0], y[0]))[-1][1]
 key_to_download.get_contents_to_filename(FILE_PATH)
+zip_file = ZipFile(FILE_PATH)
+zip_file.extractall('d:\\backup\\s3\\')
