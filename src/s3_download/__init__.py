@@ -12,6 +12,7 @@ FILE_PATH = 'd:\\backup\\s3\\current_wdpa.zip'
 AWS_ACCESS_KEY_ID = s3_secrets['access_key_id']
 AWS_SECRET_ACCESS_KEY = s3_secrets['secret_access_key']
 bucket_name = s3_secrets['bucket_name']
+
 # connect to the bucket
 conn = boto.connect_s3(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
 bucket = conn.get_bucket(bucket_name)
