@@ -1,0 +1,3 @@
+access_key_id: VERY_LONG_ID
+secret_access_key: even_longer_access_key
+bucket_name: small_bucket_name_when_compared_with_above_keys
