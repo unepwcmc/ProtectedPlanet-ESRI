@@ -1,7 +1,7 @@
 import arcpy
 
 # define local variables
-workspace = 'd:/projects/ProtectedPlanet-ESRI/mxd/'
+workspace = 'd:/projects/ProtectedPlanet-ESRI/lib/'
 mapDoc = arcpy.mapping.MapDocument(workspace + 'wdpa.mxd')
 con = 'GIS Servers/arcgis on localhost_6080 (admin).ags'
 service = 'wdpa'
@@ -11,8 +11,7 @@ summary = 'WDPA'
 tags = 'Protected Areas, Conservation, UNEP-WCMC'
 
 # create service definition draft
-analysis = arcpy.mapping.CreateMapSDDraft(mapDoc, sddraft, service, 'ARCGIS_SERVER',
-                                          con, True, None, summary, tags)
+analysis = analysis = arcpy.mapping.AnalyzeForSD(sddraft)
 
 # stage and upload the service if the sddraft analysis did not contain errors
 if analysis['errors'] == {}:
