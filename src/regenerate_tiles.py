@@ -6,35 +6,48 @@ class RegenerateTiles:
 
 
     def __init__(self):
+        connectionFile = r"C:\Users\administrator\AppData\Roaming\ESRI\Desktop10.1\ArcCatalog"
+        server = "arcgis on localhost_6080 (admin)"
+        serviceName = "wdpa/wdpa.MapServer"
+        inputService = connectionFile + "\\" + server + "\\" + serviceName
+        scales = ""
+        numOfCachingServiceInstances = 2
+        updateMode = "RECREATE_ALL_TILES"
+        areaOfInterest = ""
+        waitForJobCompletion = "WAIT"
+        updateExtents = ""
+        env.workspace = "d:\data"
+        current_time = self.current_time()
+        print current_time
+        report_location = os.path.join('d:/', 'data/')
+        report = self.report_file(current_time[0], report_location)
+        successfully_generated = self.manage_mapserver(current_time[1], report, serviceName, inputService, scales, updateMode,numOfCachingServiceInstances,areaOfInterest, updateExtents, waitForJobCompletion)
+        print 'Tiles Updated Successfully' if successfully_generated else 'Tiles Not Updated'
 
-
-        server = "localhost"
-        service = "wdpa/wdpa"
-        dataFrame = ""
-        inputLayers = ""
-        extent = ""
-        tiling_scheme = 'ARCGISONLINE_SCHEME'
-        scales = "591657527.591555;295828763.79577702;147914381.89788899;73957190.948944002;36978595.474472001;18489297.737236001;9244648.8686180003;4622324.4343090001;2311162.2171550002"
-        updateMode = "Recreate All Tiles"
-        threadCount = "2"
-        antialiasing = "NONE"
-        pathToFeatureClass = ""
-        ignoreStatus = ""
-        tile_format = 'PNG'
-
-# These lines run the update tool
+    def current_time(self):
         currentTime = datetime.datetime.now()
         arg1 = currentTime.strftime("%H-%M")
         arg2 = currentTime.strftime("%Y-%m-%d %H:%M")
-        file = 'C:/data/report_%s.txt' % arg1
+        return [arg1,arg2]
 
-# print results of the script to a report
-        report = open(file,'w')
+
+    def report_file(self, current_time, report_file_location):
+        file_name = r'report_%s.txt' % current_time
+        report_file = report_file_location + file_name
+        report = open(report_file,'w')
+        return report
+
+    def manage_mapserver(self, current_time, report, serviceName, inputService, scales, updateMode,numOfCachingServiceInstances,areaOfInterest, updateExtents, waitForJobCompletion):
+
         try:
             starttime = time.clock()
-            print 'Starting Cache Update'
-            result = arcpy.ManageMapServerCacheTiles_server(server, service, dataFrame,
-                                           inputLayers, tiling_scheme, scales, updateMode, antialiasing, pathToFeatureClass,ignoreStatus, tile_format)
+            result = arcpy.ManageMapServerCacheTiles_server(inputService,
+                                                            scales,
+                                                            updateMode,
+                                                            numOfCachingServiceInstances,
+                                                            areaOfInterest,
+                                                            updateExtents,
+                                                            waitForJobCompletion)
             finishtime = time.clock()
             elapsedtime= finishtime - starttime
             while result.status < 4:
@@ -43,13 +56,15 @@ class RegenerateTiles:
             report.write ("completed " + str(resultValue))
 
             print "Created cache tiles for given schema successfully for "
-            + service + " in " + str(elapsedtime) + " sec \n on " + arg2
+            serviceName + " in " + str(elapsedtime) + " sec \n on " + current_time
+            return True
 
         except Exception, e:
             # If an error occurred, print line number and error message
-            tb = sys.exc_info()[2]
-            report.write("Failed at step 1 \n" "Line %i" % tb.tb_lineno)
-            report.write(e.message)
-            report.close()
+                tb = sys.exc_info()[2]
+                report.write("Failed at step 1 \n" "Line %i" % tb.tb_lineno)
+                report.write(e.message)
+                report.close()
+                return False
 
         print "Created Map server Cache Tiles "
