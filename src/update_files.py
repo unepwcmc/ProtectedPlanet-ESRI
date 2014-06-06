@@ -1,4 +1,4 @@
-import os, arcpy, shutil
+import os, arcpy, shutil, logging, sys
 from arcpy import env
 
 
@@ -10,7 +10,8 @@ class UpdateFiles:
         download_path = target_directory + 's3\\'
         current_filegdb_name = 'WDPA_current.gdb'
         old_suffix = '_old'
-
+        self.log_file = os.path.join('d:/', 'data','import_logs','files_log.txt')
+        logging.basicConfig(filename=self.log_file,level=logging.DEBUG)
         download_subdirs = self.all_subdirs_of(download_path)
         latest_download = self.latest_subdir(download_subdirs)
         filegdb_full_path = self.all_subdirs_of(latest_download)[0]
@@ -25,21 +26,41 @@ class UpdateFiles:
         os.renames(filegdb_full_path, target_directory + current_filegdb_name)
 
     def all_subdirs_of(self,directory):
-        return [os.path.join(directory, name) for name in os.listdir(directory)
-            if os.path.isdir(os.path.join(directory, name))]
+        try:
+            return [os.path.join(directory, name)
+                    for name in os.listdir(directory)
+                    if os.path.isdir(os.path.join(directory, name))]
+        except Exception, e:
+            tb = sys.exc_info()[2]
+            logging.error('Failed to get subdirectories ' + e.message
+                          + tb.tb_lineno)
 
     def latest_subdir(self, all_subdirs):
-        return max(all_subdirs, key=os.path.getmtime)
+        try:
+            return max(all_subdirs, key=os.path.getmtime)
+        except Exception, e:
+            tb = sys.exc_info()[2]
+            logging.error('Failed to get latest subdirectory ' + e.message
+                          + tb.tb_lineno)
 
 
     def feature_name(self, name):
-        feature_classes = arcpy.ListFeatureClasses()
-        return filter(lambda x:name in x, feature_classes)
+        try:
+            feature_classes = arcpy.ListFeatureClasses()
+            return filter(lambda x:name in x, feature_classes)
+        except Exception, e:
+            tb = sys.exc_info()[2]
+            logging.error('Failed to get feature name ' + e.message
+                          + tb.tb_lineno)
 
     def change_table_name(self, table, geometry_type):
-        print table
-        return arcpy.Rename_management(table, 'WDPA_' + geometry_type)
-
+        try:
+            print table
+            return arcpy.Rename_management(table, 'WDPA_' + geometry_type)
+        except Exception, e:
+            tb = sys.exc_info()[2]
+            logging.error('Failed to change table name ' + e.message
+                          + tb.tb_lineno)
 
 
 
