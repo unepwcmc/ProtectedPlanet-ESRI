@@ -10,7 +10,10 @@ class S3Download:
         aws_access_key = s3_secrets['access_key_id']
         aws_secret_access_key = s3_secrets['secret_access_key']
         bucket_name = s3_secrets['bucket_name']
-        bucket = self.connect_to_bucket(aws_access_key, aws_secret_access_key, bucket_name)
+        bucket = self.connect_to_bucket(aws_access_key,
+                                        aws_secret_access_key,
+                                        bucket_name
+                                        )
         self.download_zip_file(bucket, download_path)
         self.uncompress_file(download_path)
 
@@ -20,7 +23,9 @@ class S3Download:
 
     def download_zip_file(self, bucket, download_path):
         file_list = [(k.last_modified, k) for k in bucket]
-        key_to_download = sorted(file_list, cmp=lambda x,y: cmp(x[0], y[0]))[-1][1]
+        key_to_download = sorted(file_list,
+                                 cmp=lambda x,y: cmp(x[0], y[0])
+                                 )[-1][1]
         return key_to_download.get_contents_to_filename(download_path)
 
     def uncompress_file(self, file_path):

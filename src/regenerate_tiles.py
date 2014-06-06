@@ -11,7 +11,7 @@ class RegenerateTiles:
         serviceName = "wdpa/wdpa.MapServer"
         inputService = connectionFile + "\\" + server + "\\" + serviceName
         scales = ""
-        numOfCachingServiceInstances = 2
+        numOfCachingService = 2
         updateMode = "RECREATE_ALL_TILES"
         areaOfInterest = ""
         waitForJobCompletion = "WAIT"
@@ -21,8 +21,17 @@ class RegenerateTiles:
         print current_time
         report_location = os.path.join('d:/', 'data/')
         report = self.report_file(current_time[0], report_location)
-        successfully_generated = self.manage_mapserver(current_time[1], report, serviceName, inputService, scales, updateMode,numOfCachingServiceInstances,areaOfInterest, updateExtents, waitForJobCompletion)
-        print 'Tiles Updated Successfully' if successfully_generated else 'Tiles Not Updated'
+        successfully_generated = self.manage_mapserver(current_time[1],
+                                                       report, serviceName,
+                                                       inputService,
+                                                       scales,
+                                                       updateMode,
+                                                       numOfCachingService,
+                                                       areaOfInterest,
+                                                       updateExtents,
+                                                       waitForJobCompletion)
+        print 'Tiles Updated Successfully' if successfully_generated \
+        else 'Tiles Not Updated'
 
     def current_time(self):
         currentTime = datetime.datetime.now()
@@ -37,17 +46,21 @@ class RegenerateTiles:
         report = open(report_file,'w')
         return report
 
-    def manage_mapserver(self, current_time, report, serviceName, inputService, scales, updateMode,numOfCachingServiceInstances,areaOfInterest, updateExtents, waitForJobCompletion):
+    def manage_mapserver(self,
+                         current_time, report, serviceName, inputService,
+                         scales, updateMode,numOfCachingService,
+                         areaOfInterest, updateExtents, waitForJobCompletion):
 
         try:
             starttime = time.clock()
             result = arcpy.ManageMapServerCacheTiles_server(inputService,
                                                             scales,
                                                             updateMode,
-                                                            numOfCachingServiceInstances,
+                                                            numOfCachingService,
                                                             areaOfInterest,
                                                             updateExtents,
-                                                            waitForJobCompletion)
+                                                            waitForJobCompletion
+                                                            )
             finishtime = time.clock()
             elapsedtime= finishtime - starttime
             while result.status < 4:
@@ -55,8 +68,9 @@ class RegenerateTiles:
             resultValue = result.getMessages()
             report.write ("completed " + str(resultValue))
 
-            print "Created cache tiles for given schema successfully for "
-            serviceName + " in " + str(elapsedtime) + " sec \n on " + current_time
+            print "Created cache tiles for given schema successfully for " + \
+            serviceName + " in " + str(elapsedtime) + \
+            " sec \n on " + current_time
             return True
 
         except Exception, e:
