@@ -5,15 +5,9 @@ class S3Download:
 
 
 
-    def  __init__ (self):
+    def  __init__ (self,download_path,aws_access_key,aws_secret_access_key,bucket_name):
         self.log_file = os.path.join('d:/', 'data','import_logs','s3_log.txt')
         logging.basicConfig(filename=self.log_file,level=logging.DEBUG)
-        s3_secrets_file = open(os.path.join('config','s3.yaml'),'r')
-        s3_secrets = yaml.load(s3_secrets_file)
-        download_path = os.path.join('d:/', 'data', 's3', 'new_wdpa.zip')
-        aws_access_key = s3_secrets['access_key_id']
-        aws_secret_access_key = s3_secrets['secret_access_key']
-        bucket_name = s3_secrets['bucket_name']
         bucket = self.connect_to_bucket(aws_access_key,
                                         aws_secret_access_key,
                                         bucket_name

@@ -4,9 +4,8 @@ from arcpy import env
 
 class UpdateFiles:
 
-    def __init__ (self):
+    def __init__ (self,target_directory):
 
-        target_directory = 'd:\\data\\'
         download_path = target_directory + 's3\\'
         current_filegdb_name = 'WDPA_current.gdb'
         old_suffix = '_old'

@@ -5,12 +5,9 @@ import os, sys, time, datetime, traceback, string, logging
 class RegenerateTiles:
 
 
-    def __init__(self):
+    def __init__(self,data_directory,connectionFile,server,serviceName):
         self.log_file = os.path.join('d:/', 'data','import_logs','tiles_log.txt')
         logging.basicConfig(filename=self.log_file,level=logging.DEBUG)
-        connectionFile = r"C:\Users\administrator\AppData\Roaming\ESRI\Desktop10.1\ArcCatalog"
-        server = "arcgis on localhost_6080 (admin)"
-        serviceName = "wdpa/wdpa.MapServer"
         inputService = connectionFile + "\\" + server + "\\" + serviceName
         scales = ""
         numOfCachingService = 2
@@ -18,7 +15,7 @@ class RegenerateTiles:
         areaOfInterest = ""
         waitForJobCompletion = "WAIT"
         updateExtents = ""
-        env.workspace = "d:\data"
+        env.workspace = data_directory
         successfully_generated = self.manage_mapserver(serviceName,
                                                        inputService,
                                                        scales,
