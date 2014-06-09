@@ -19,7 +19,23 @@ pip install -r requirements.txt
 There should be a s3.yaml file in the config directory.
 Change the s3_example.yaml file to access your own S3 bucket.
 
-#Run
+
+
+##Run
+
+
+#First time
+
+You should run:
+
+```
+python create_service.py
+```
+
+This will generate a .sd file with the service definition and starts a service for this ArcGIS server.
+
+#Monthly Updates
+
 You should run the monthly_update file in the src directory
 
 ```
