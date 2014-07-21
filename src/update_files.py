@@ -1,4 +1,4 @@
-import os, arcpy, shutil, logging, sys
+import os, arcpy, shutil, logging, sys, pdb
 from arcpy import env
 
 
@@ -20,8 +20,9 @@ class UpdateFiles:
         self.change_table_name(poly_table, 'poly')
         self.change_table_name(point_table, 'point')
         shutil.rmtree(target_directory + current_filegdb_name + old_suffix)
-        os.renames(target_directory + current_filegdb_name,
-                   target_directory + current_filegdb_name + old_suffix)
+        current_filegdb = target_directory + current_filegdb_name
+        old_filegdb = target_directory + current_filegdb_name + old_suffix
+        os.renames(current_filegdb,old_filegdb)
         os.renames(filegdb_full_path, target_directory + current_filegdb_name)
 
     def all_subdirs_of(self,directory):
