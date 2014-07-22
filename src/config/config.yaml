@@ -1,5 +1,5 @@
 download_directory: 'd:/data/s3/'
 data_directory: 'd:/data/'
-connection_file: "d:\\Users\\administrator\\AppData\\Roaming\\ESRI\\Desktop10.1\\ArcCatalog"
+connection_file: "c:\\Users\\administrator\\AppData\\Roaming\\ESRI\\Desktop10.1\\ArcCatalog"
 server: 'arcgis on localhost_6080 (admin)'
 service_name: 'wdpa/wdpa.MapServer'
