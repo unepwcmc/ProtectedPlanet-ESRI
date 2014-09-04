@@ -53,5 +53,5 @@ class RegenerateTiles:
 
         except Exception, e:
             tb = sys.exc_info()[2]
-            logging.error('Failed to uncompress file ' + e.message + tb.tb_lineno)
+
 

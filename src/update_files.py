@@ -15,8 +15,8 @@ class UpdateFiles:
         latest_download = self.latest_subdir(download_subdirs)
         filegdb_full_path = self.all_subdirs_of(latest_download)[0]
         env.workspace = filegdb_full_path
-        poly_table = self.feature_name('WDPApoly')[0]
-        point_table = self.feature_name('WDPApoint')[0]
+        poly_table = self.feature_name('WDPA_poly')[0]
+        point_table = self.feature_name('WDPA_point')[0]
         self.change_table_name(poly_table, 'poly')
         self.change_table_name(point_table, 'point')
         shutil.rmtree(target_directory + current_filegdb_name + old_suffix)
